@@ -20,7 +20,7 @@ use yii\web\IdentityInterface;
  * @property int $created_at
  * @property int $updated_at
  */
-class Users extends \yii\db\ActiveRecord implements IdentityInterface
+class User extends \yii\db\ActiveRecord implements IdentityInterface
 {
     const STATUS_DELETED = 0;
     const STATUS_INACTIVE = 9;
@@ -115,12 +115,12 @@ class Users extends \yii\db\ActiveRecord implements IdentityInterface
 
     public function getAuthKey()
     {
-        return $this->authKey;
+        return $this->auth_key;
     }
 
     public function validateAuthKey($authKey)
     {
-        return $this->authKey === $authKey;
+        return $this->auth_key === $authKey;
     }
 
     /**

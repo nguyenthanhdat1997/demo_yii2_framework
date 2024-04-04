@@ -21,17 +21,16 @@ class SignupForm extends Model
     public function rules()
     {
         return [
-            [['username','email'], 'trim'],
-            [['username','email','password'], 'required'],
+            [['username', 'email'], 'trim'],
+            [['username', 'email', 'password'], 'required'],
 
             ['username', 'unique', 'targetClass' => '\app\models\User', 'message' => 'This username has already been taken.'],
             ['username', 'string', 'min' => 6, 'max' => 255],
 
             ['email', 'email'],
-            ['email', 'string','min' => 6, 'max' => 255],
+            ['email', 'string', 'min' => 6, 'max' => 255],
             ['email', 'unique', 'targetClass' => '\app\models\User', 'message' => 'This email address has already been taken.'],
 
-            [ 'required'],
             ['password', 'string', 'min' => Yii::$app->params['user.passwordMinLength']],
         ];
     }
@@ -47,19 +46,20 @@ class SignupForm extends Model
             return null;
         }
 
-        $user = new Users();
+        $user = new User();
         $user->username = $this->username;
         $user->email = $this->email;
         $user->setPassword($this->password);
         $user->generateAuthKey();
         $user->generateEmailVerificationToken();
-
-        return $user->save() && $this->sendEmail($user);
+        $user->created_at = time();
+        $user->updated_at = time();
+        return $user->save();
     }
 
     /**
      * Sends confirmation email to user
-     * @param Users $user user model to with email should be send
+     * @param User $user user model to with email should be send
      * @return bool whether the email was sent
      */
     protected function sendEmail($user)
